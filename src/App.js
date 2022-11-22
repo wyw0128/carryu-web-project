@@ -1,10 +1,13 @@
-import logo from "./logo.svg";
 import "./App.css";
+import { Colors } from "./styles/variables";
+
+import Card from "./components/Card/Card";
+import GlobalStyle from "./globalStyles";
 
 function App() {
   return (
     <>
-      <div></div>
+      <GlobalStyle />
     </>
   );
 }
