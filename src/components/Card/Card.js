@@ -1,44 +1,53 @@
 import React from "react";
-import { Shadows } from "../../styles/variables";
+import { Shadows, Colors } from "../../styles/variables";
 import { P, H3 } from "../Typography/index";
+import { IconWrapper } from "../Icons/styles";
 import styled from "styled-components";
-import success from "../../assets/icons/success.svg";
+import { SuccessIcon } from "../Icons";
 
-const StyledCard = styled.div`
+const StyledCard = styled.article`
   box-shadow: ${Shadows.Medium};
   border-radius: 4px;
+  width: 100%;
+  height: 100%;
+  flex-basis: 25%;
+  flex-shrink: 0;
 `;
 
 const StyledTitleContainer = styled.div`
   display: flex;
-  gap: 1rem;
   align-items: center;
   background-color: ${(props) => props.titleBackgroundColor};
 `;
 
-const SvgContainer = styled.div`
-  margin: 1rem 0 14.73px 1rem;
-`;
-
 const CardTitleTextContainer = styled(H3)`
   margin: 0;
-  padding: 22px 0 20px 0;
+  //NOTE: try use 4px based number
+  padding: 20px 0;
 `;
 
 const TextContainer = styled(P)`
   padding: 1rem;
+  width: 100%;
+  height: 100%;
 `;
 
-export default function Card(props) {
+export default function Card({
+  title,
+  content,
+  titleBackgroundColor = Colors.GreyPrimary,
+}) {
   return (
     <StyledCard>
-      <StyledTitleContainer titleBackgroundColor={props.titleBackgroundColor}>
-        <SvgContainer>
-          <img src={success} alt="success icon" />
-        </SvgContainer>
-        <CardTitleTextContainer>{props.title}</CardTitleTextContainer>
+      <StyledTitleContainer titleBackgroundColor={titleBackgroundColor}>
+        <IconWrapper>
+          {/* NOTE: third party icon will not support this */}
+          {/* <img src={AcUnitIcon} alt="success icon" width={"80%"} /> */}
+          <SuccessIcon />
+        </IconWrapper>
+        <CardTitleTextContainer>{title}</CardTitleTextContainer>
       </StyledTitleContainer>
-      <TextContainer>{props.content}</TextContainer>
+      <TextContainer>{content}</TextContainer>
     </StyledCard>
   );
 }
