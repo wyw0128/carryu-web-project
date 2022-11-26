@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { urlFor } from "../../utils/sanity-utils";
+import { H3 } from "../../components/Typography";
 import Carousel from "../../components/Carousel/Carousel";
 import CardsList from "../../components/CardsList/CardsList";
 import VideoEmbed from "../../components/Video/VideoEmbed";
-import { urlFor } from "../../utils/sanity-utils";
+import PostsList from "../../components/PostsList/PostsList";
 const sanityClient = require("@sanity/client");
 
 const client = sanityClient({
@@ -20,16 +22,19 @@ const eduVideoQuery =
   '*[_type == "videos" && type == "education"] | order(_updatedAt desc) [0] {id,description,type}';
 const immVideoQuery =
   '*[_type == "videos" && type == "immigration"] | order(_updatedAt desc) [0] {id,description,type}';
+const postsQuery = '*[_type == "posts" ] | order(_updatedAt desc) {title}';
 export default function Home() {
-  const [sliderImageSrcs, setImageSrcs] = useState([]);
-  const [sliderAlts, setSliderAlts] = useState([]);
   const [isCarouselLoading, setIsCarouselLoading] = useState(true);
   const [isSamplesLoading, setIsSamplesLoading] = useState(true);
   const [isEduVideoLoading, setIsEduVideoLoading] = useState(true);
   const [isImmVideoLoading, setIsImmVideoLoading] = useState(true);
+  const [isPostListLoading, setIsPostListLoading] = useState(true);
+  const [sliderImageSrcs, setImageSrcs] = useState([]);
+  const [sliderAlts, setSliderAlts] = useState([]);
   const [samplesData, setSamplesData] = useState([]);
   const [eduVideoData, setEduVideoData] = useState({});
   const [immVideoData, setImmVideoData] = useState({});
+  const [postListData, setPostListData] = useState([]);
   useEffect(() => {
     try {
       client.fetch(carouselQuery, {}).then((sliders) => {
@@ -50,6 +55,10 @@ export default function Home() {
         setIsImmVideoLoading(false);
         setImmVideoData(result);
       });
+      client.fetch(postsQuery, {}).then((result) => {
+        setIsPostListLoading(false);
+        setPostListData(result.map((data) => data.title));
+      });
     } catch (err) {
       console.error(err);
     }
@@ -67,7 +76,16 @@ export default function Home() {
   }, []);
   const isEduVideo = !isEduVideoLoading && eduVideoData.type === "education";
   const isImmVideo = !isImmVideoLoading && immVideoData.type === "immigration";
-  console.log(immVideoData);
+  // const EduVideoSection = styled.section`
+  //   width: 80%;
+  //   margin: 8rem auto;
+  // `;
+  // const ImmVideoSection = styled.section`
+  //   width: 100%;
+  //   display: flex;
+  //   justify-content: space-between;
+  //   align-items: flex-start;
+  // `;
   return (
     <>
       <Carousel
@@ -83,8 +101,10 @@ export default function Home() {
           description={eduVideoData.description}
         />
       )}
+
       {!isSamplesLoading && <CardsList sampleListData={samplesData} />}
-      {/* <div>移民专区</div> */}
+      <H3>移民专区</H3>
+      {/* <ImmVideoSection> */}
       {isImmVideo && (
         <VideoEmbed
           isVideoLoading={isImmVideoLoading}
@@ -92,7 +112,8 @@ export default function Home() {
           description={immVideoData.description}
         />
       )}
-      <article></article>
+      <PostsList postListData={postListData} />
+      {/* </ImmVideoSection> */}
     </>
   );
 }

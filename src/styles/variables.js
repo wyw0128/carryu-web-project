@@ -12,6 +12,7 @@ export const FontWeights = {
   Medium: 500,
   SemiBold: 600,
   Bold: 700,
+  SuperBold: 900,
 };
 
 export const Shadows = {
