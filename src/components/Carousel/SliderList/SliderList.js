@@ -5,7 +5,7 @@ import Slider from "../Slider/Slider";
 
 import { CarouselContext } from "../CarouselContext";
 
-export default function SliderList(props) {
+export default function SliderList() {
   const { sliderImageSrcs, sliderAlts, isLoading } =
     useContext(CarouselContext);
 

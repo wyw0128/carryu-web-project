@@ -21,12 +21,8 @@ export default function CardsList({ sampleListData }) {
     <CardsListContextProvider value={{ sampleListData }}>
       <Slider {...settings}>
         {sampleListData.map((data, i) => (
-          <CardWrapper>
-            <Card
-              key={i}
-              title={`恭喜${data.postName}`}
-              content={data.postText}
-            />
+          <CardWrapper key={i}>
+            <Card title={`恭喜${data.postName}`} content={data.postText} />
           </CardWrapper>
         ))}
       </Slider>
