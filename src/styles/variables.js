@@ -6,12 +6,15 @@ export const Colors = {
   GreenPrimary: "#22C55E",
 };
 
+export const PrimaryColor = Colors.YellowPrimary;
+
 export const FontWeights = {
   Light: 300,
   Normal: 400,
   Medium: 500,
   SemiBold: 600,
   Bold: 700,
+  SuperBold: 900,
 };
 
 export const Shadows = {

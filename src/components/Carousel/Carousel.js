@@ -23,7 +23,7 @@ export default function Carousel(props) {
     <CarouselContextProvider value={{ sliderImageSrcs, sliderAlts, isLoading }}>
       <CarouselWrapper ref={carouselWrapperRef} carouselHeight={carouselHeight}>
         <SlidersWrapper ref={sliderWrapperRef}>
-          <SliderList data={props.data} />
+          <SliderList />
         </SlidersWrapper>
         <Dots
           goToSlide={goToSlide}
