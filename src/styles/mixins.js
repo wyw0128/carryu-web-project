@@ -13,7 +13,7 @@ export const H3Styles = css`
   font-family: inherit;
   /* TODO: responsive font size */
   font-size: 36px;
-  font-weight: ${FontWeights.Normal};
+  font-weight: ${FontWeights.Bold};
   line-height: 150%;
 `;
 

@@ -1,11 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { urlFor } from "../../utils/sanity-utils";
 import { H3 } from "../../components/Typography";
+import { GridMax, Col12, DynamicCol } from "../../styles/layout";
 import Carousel from "../../components/Carousel/Carousel";
 import CardsList from "../../components/CardsList/CardsList";
 import VideoEmbed from "../../components/Video/VideoEmbed";
 import PostsList from "../../components/PostsList/PostsList";
+import { SectionTitle } from "../Home/SectionTitle";
+import styled from "styled-components";
+
 const sanityClient = require("@sanity/client");
+
+const StyledSectionTitle = styled(SectionTitle)`
+  /* NOTE: Using this kind grid-column can help set up justify content center */
+  grid-column: 6 / 8;
+  margin-bottom: 4rem;
+  justify-content: center;
+`;
+
+const VideoWrapper = styled.div`
+  grid-column: 3 / 11;
+`;
 
 const client = sanityClient({
   projectId: "s5jcdx1h",
@@ -93,26 +108,37 @@ export default function Home() {
         sliderAlts={sliderAlts}
         isLoading={isCarouselLoading}
       />
-      {/* <div>留学专区</div> */}
-      {isEduVideo && (
-        <VideoEmbed
-          isVideoLoading={isEduVideoLoading}
-          embedId={eduVideoData.id}
-          description={eduVideoData.description}
-        />
-      )}
+      <GridMax>
+        <StyledSectionTitle>留学专区</StyledSectionTitle>
+        <VideoWrapper>
+          {isEduVideo && (
+            <VideoEmbed
+              isVideoLoading={isEduVideoLoading}
+              embedId={eduVideoData.id}
+              description={eduVideoData.description}
+            />
+          )}
+        </VideoWrapper>
+      </GridMax>
 
       {!isSamplesLoading && <CardsList sampleListData={samplesData} />}
-      <H3>移民专区</H3>
       {/* <ImmVideoSection> */}
-      {isImmVideo && (
-        <VideoEmbed
-          isVideoLoading={isImmVideoLoading}
-          embedId={immVideoData.id}
-          description={immVideoData.description}
-        />
-      )}
-      <PostsList postListData={postListData} />
+      <GridMax>
+        <StyledSectionTitle>移民专区</StyledSectionTitle>
+        <DynamicCol ratio={6}>
+          {isImmVideo && (
+            <VideoEmbed
+              isVideoLoading={isImmVideoLoading}
+              embedId={immVideoData.id}
+              description={immVideoData.description}
+            />
+          )}
+        </DynamicCol>
+        <DynamicCol ratio={6}>
+          <PostsList postListData={postListData} />
+        </DynamicCol>
+      </GridMax>
+
       {/* </ImmVideoSection> */}
     </>
   );
