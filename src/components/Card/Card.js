@@ -1,8 +1,9 @@
 import React from "react";
+import styled from "styled-components/macro";
+import PropTypes from "prop-types";
 import { Shadows, Colors } from "../../styles/variables";
 import { P, H3 } from "../Typography/index";
 import { IconWrapper } from "../Icons/styles";
-import styled from "styled-components";
 import { SuccessIcon } from "../Icons";
 
 const StyledCard = styled.article`
@@ -57,3 +58,8 @@ export default function Card({
     </StyledCard>
   );
 }
+Card.propTypes = {
+  width: PropTypes.number.isRequired,
+  title: PropTypes.string.isRequired,
+  content: PropTypes.string.isRequired,
+};

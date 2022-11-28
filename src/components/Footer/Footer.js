@@ -1,10 +1,10 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styled from "styled-components/macro";
-import { P } from "../Typography";
 import { PrimaryColor } from "../../styles/variables";
 export default function Footer({ isFooterLoading, footerData }) {
   const FooterContainer = styled.section`
-    font-size: 18px;
+    font-size: 16px;
     font-family: inherit;
     padding: 1rem 2rem;
     display: flex;
@@ -38,3 +38,7 @@ export default function Footer({ isFooterLoading, footerData }) {
     )
   );
 }
+Footer.propTypes = {
+  isFooterLoading: PropTypes.bool.isRequired,
+  footerData: PropTypes.array.isRequired,
+};

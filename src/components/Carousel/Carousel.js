@@ -4,8 +4,12 @@ import { CarouselContextProvider } from "../../components/Carousel/CarouselConte
 import SliderList from "./SliderList/SliderList";
 import Dots from "./Dots/Dots";
 import { CarouselWrapper, SlidersWrapper } from "./styles";
-export default function Carousel(props) {
-  const { width, sliderImageSrcs, sliderAlts, isLoading } = props;
+export default function Carousel({
+  width,
+  sliderImageSrcs,
+  sliderAlts,
+  isLoading,
+}) {
   const [activeSlide, setActiveSlide] = useState(0);
   const [carouselHeight, setCarouselHeight] = useState(null);
   const sliderWrapperRef = useRef(null);

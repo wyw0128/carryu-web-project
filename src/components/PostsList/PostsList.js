@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components/macro";
+import PropTypes from "prop-types";
+import { Skeleton } from "@mui/material";
 import Button from "../Button/Button";
 import {
   FontWeights,
@@ -55,27 +57,43 @@ const TextContent = styled.span`
 const ButtonWrapper = styled.div`
   margin-left: auto;
 `;
-export default function PostsList({ width, postListData }) {
+export default function PostsList({ width, postListData, isPostListLoading }) {
   const fontSize = width <= 500 ? "16px" : "18px";
   return (
     <PostsListContainer>
-      <PostsListTitle>往期回顾</PostsListTitle>
-      <PostsListWrapper>
-        {postListData.map((data, i) => (
-          // TODO: href link to another inner page
-          <>
-            <PostLink href={"http://google.com"} key={i}>
-              <TextContent fontSize={fontSize}>{data}</TextContent>
-              <PostIconWrapper>
-                <ShowMoreIcon />
-              </PostIconWrapper>
-            </PostLink>
-          </>
-        ))}
-      </PostsListWrapper>
-      <ButtonWrapper>
-        <Button label={"更多"} />
-      </ButtonWrapper>
+      {isPostListLoading ? (
+        <Skeleton
+          variant="rounded"
+          animation="wave"
+          width="100%"
+          height="100%"
+        />
+      ) : (
+        <>
+          <PostsListTitle>往期回顾</PostsListTitle>
+          <PostsListWrapper>
+            {postListData.map((data, i) => (
+              // TODO: href link to another inner page
+              <>
+                <PostLink href={"http://google.com"} key={i}>
+                  <TextContent fontSize={fontSize}>{data}</TextContent>
+                  <PostIconWrapper>
+                    <ShowMoreIcon />
+                  </PostIconWrapper>
+                </PostLink>
+              </>
+            ))}
+          </PostsListWrapper>
+          <ButtonWrapper>
+            <Button label={"更多"} />
+          </ButtonWrapper>
+        </>
+      )}
     </PostsListContainer>
   );
 }
+PostsList.propTypes = {
+  width: PropTypes.number.isRequired,
+  postListData: PropTypes.array.isRequired,
+  isPostListLoading: PropTypes.bool.isRequired,
+};
