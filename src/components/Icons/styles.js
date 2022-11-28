@@ -5,8 +5,7 @@ import { Colors } from "../../styles/variables";
 export const IconWrapper = styled.span`
   margin: 1rem 0 12px 1rem;
   // can use props to pass width or height
-  width: 66px;
-  height: 66px;
+  width: ${(props) => props.iconWidth};
   /* NOTE:  */
   > svg {
     width: 100%;

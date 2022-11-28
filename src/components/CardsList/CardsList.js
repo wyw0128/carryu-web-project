@@ -5,13 +5,15 @@ import Card from "../Card/Card";
 import styled from "styled-components";
 
 const CardWrapper = styled.div`
-  padding-right: 20px;
+  padding: 0 0 10px 20px;
 `;
 
-export default function CardsList({ sampleListData }) {
+export default function CardsList({ width, sampleListData }) {
+  const slidesToShow = width >= 1024 ? 4 : 2;
+
   const settings = {
     infinite: true,
-    slidesToShow: 4,
+    slidesToShow: slidesToShow,
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 2500,
@@ -22,7 +24,11 @@ export default function CardsList({ sampleListData }) {
       <Slider {...settings}>
         {sampleListData.map((data, i) => (
           <CardWrapper key={i}>
-            <Card title={`恭喜${data.postName}`} content={data.postText} />
+            <Card
+              width={width}
+              title={`恭喜${data.postName}`}
+              content={data.postText}
+            />
           </CardWrapper>
         ))}
       </Slider>

@@ -17,37 +17,48 @@ const VideoWrapper = styled.div`
   right: 0;
 `;
 const TextContainer = styled(P)`
+  font-size: ${(props) => props.fontSize};
   font-weight: ${FontWeights.Bold};
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: -3rem;
+  text-align: center;
+  margin: 10px;
 `;
-const VideoEmbed = ({ embedId, description, isVideoLoading }) => (
-  <VideoContainer>
-    {isVideoLoading ? (
-      <Skeleton variant="rounded" animation="wave" width="100%" height="100%" />
-    ) : (
-      <VideoWrapper>
-        <iframe
-          // TODO: width & height ratio
-          width="100%"
-          height="100%"
-          src={`https://www.ixigua.com/iframe/${embedId}?autoplay=0`}
-          referrerPolicy="unsafe-url"
-          frameBorder="0"
-          allowFullScreen
-          title={description}
-        />
-      </VideoWrapper>
-    )}
-    <TextContainer>{description}</TextContainer>
-  </VideoContainer>
-);
+const VideoEmbed = ({ width, embedId, description, isVideoLoading }) => {
+  const fontSize = width <= 500 ? "14px" : "";
+  return (
+    <>
+      <VideoContainer>
+        {isVideoLoading ? (
+          <Skeleton
+            variant="rounded"
+            animation="wave"
+            width="100%"
+            height="100%"
+          />
+        ) : (
+          <VideoWrapper>
+            <iframe
+              // TODO: width & height ratio
+              width="100%"
+              height="100%"
+              src={`https://www.ixigua.com/iframe/${embedId}?autoplay=0`}
+              referrerPolicy="unsafe-url"
+              frameBorder="0"
+              allowFullScreen
+              title={description}
+            />
+          </VideoWrapper>
+        )}
+      </VideoContainer>
+      <TextContainer fontSize={fontSize}>{description}</TextContainer>
+    </>
+  );
+};
 
 VideoEmbed.propTypes = {
+  width: PropTypes.number.isRequired,
   embedId: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
+  isVideoLoading: PropTypes.bool.isRequired,
 };
 
 export default VideoEmbed;

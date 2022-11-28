@@ -5,7 +5,7 @@ import SliderList from "./SliderList/SliderList";
 import Dots from "./Dots/Dots";
 import { CarouselWrapper, SlidersWrapper } from "./styles";
 export default function Carousel(props) {
-  const { sliderImageSrcs, sliderAlts, isLoading } = props;
+  const { width, sliderImageSrcs, sliderAlts, isLoading } = props;
   const [activeSlide, setActiveSlide] = useState(0);
   const [carouselHeight, setCarouselHeight] = useState(null);
   const sliderWrapperRef = useRef(null);
@@ -17,8 +17,13 @@ export default function Carousel(props) {
   };
   useEffect(() => {
     // NOTE: How to get computed width value of an element
-    setCarouselHeight(carouselWrapperRef.current.offsetWidth / 3);
-  }, []);
+    // NOTE:
+    if (width <= 500) {
+      setCarouselHeight((width / 2) * 3);
+    } else {
+      setCarouselHeight(width / 3);
+    }
+  }, [width]);
   return (
     <CarouselContextProvider value={{ sliderImageSrcs, sliderAlts, isLoading }}>
       <CarouselWrapper ref={carouselWrapperRef} carouselHeight={carouselHeight}>

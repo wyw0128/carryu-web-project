@@ -1,7 +1,7 @@
 // import styled from "styled-components";
 import styled from "styled-components/macro";
 
-export const CarouselWrapper = styled.section`
+export const CarouselWrapper = styled.div`
   width: 100%;
   /* NOTE: height based on width */
   height: ${(props) => `${props.carouselHeight}px`};

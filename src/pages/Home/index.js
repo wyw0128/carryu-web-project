@@ -1,35 +1,38 @@
 import React, { useState, useEffect } from "react";
+import styled from "styled-components/macro";
 import { urlFor } from "../../utils/sanity-utils";
 import { GridMax, DynamicCol } from "../../styles/layout";
+import { useReizeObserver } from "../../hooks/useResizeObserver";
 import Carousel from "../../components/Carousel/Carousel";
 import CardsList from "../../components/CardsList/CardsList";
 import VideoEmbed from "../../components/Video/VideoEmbed";
 import PostsList from "../../components/PostsList/PostsList";
 import Footer from "../../components/Footer/Footer";
 import { SectionTitle } from "../Home/SectionTitle";
-import styled from "styled-components";
 
 const sanityClient = require("@sanity/client");
 
+const CarouselContainer = styled.section``;
+const CardsListWrapper = styled.section``;
 const StyledSectionTitle = styled(SectionTitle)`
   /* NOTE: Using this kind grid-column can help set up justify content center */
   grid-column: 6 / 8;
   margin-bottom: 4rem;
   justify-content: center;
-  @media screen and (min-width: 250px) and (max-width: 430px) {
+  @media screen and (min-width: 250px) and (max-width: 500px) {
     grid-column: span 1;
     font-size: 32px;
     line-height: 48px;
   }
 `;
-
 const VideoWrapper = styled.div`
   grid-column: 3 / 11;
-  @media screen and (min-width: 250px) and (max-width: 430px) {
+  @media screen and (min-width: 250px) and (max-width: 500px) {
     grid-column: span 1;
     padding: 0 10px;
   }
 `;
+const PostsListContainer = styled.div``;
 
 const client = sanityClient({
   projectId: "s5jcdx1h",
@@ -50,6 +53,7 @@ const postsQuery = '*[_type == "posts" ] | order(_updatedAt desc) {title}';
 const footerQuery =
   '*[_type == "footer"] | order(_updatedAt desc){text,"Url":externalUrl.externalUrl}';
 export default function Home() {
+  // TODO: make tidy & add promise
   const [isCarouselLoading, setIsCarouselLoading] = useState(true);
   const [isSamplesLoading, setIsSamplesLoading] = useState(true);
   const [isEduVideoLoading, setIsEduVideoLoading] = useState(true);
@@ -63,6 +67,7 @@ export default function Home() {
   const [immVideoData, setImmVideoData] = useState({});
   const [postListData, setPostListData] = useState([]);
   const [footerData, setFooterData] = useState([]);
+  const { width, measuredRef } = useReizeObserver();
   useEffect(() => {
     try {
       client.fetch(carouselQuery, {}).then((sliders) => {
@@ -92,7 +97,7 @@ export default function Home() {
         setFooterData(result.map((data) => data));
       });
     } catch (err) {
-      console.error(err);
+      console.error("There is something wrong with the data:", err);
     }
     return () => {
       setIsCarouselLoading(true);
@@ -106,30 +111,24 @@ export default function Home() {
       setImmVideoData({});
     };
   }, []);
-  const isEduVideo = !isEduVideoLoading && eduVideoData.type === "education";
-  const isImmVideo = !isImmVideoLoading && immVideoData.type === "immigration";
-  // const EduVideoSection = styled.section`
-  //   width: 80%;
-  //   margin: 8rem auto;
-  // `;
-  // const ImmVideoSection = styled.section`
-  //   width: 100%;
-  //   display: flex;
-  //   justify-content: space-between;
-  //   align-items: flex-start;
-  // `;
+  const isEduVideo = eduVideoData.type === "education";
+  const isImmVideo = immVideoData.type === "immigration";
   return (
     <>
-      <Carousel
-        sliderImageSrcs={sliderImageSrcs}
-        sliderAlts={sliderAlts}
-        isLoading={isCarouselLoading}
-      />
+      <CarouselContainer ref={measuredRef}>
+        <Carousel
+          width={width}
+          sliderImageSrcs={sliderImageSrcs}
+          sliderAlts={sliderAlts}
+          isLoading={isCarouselLoading}
+        />
+      </CarouselContainer>
       <GridMax>
         <StyledSectionTitle>留学专区</StyledSectionTitle>
-        <VideoWrapper>
+        <VideoWrapper ref={measuredRef}>
           {isEduVideo && (
             <VideoEmbed
+              width={width}
               isVideoLoading={isEduVideoLoading}
               embedId={eduVideoData.id}
               description={eduVideoData.description}
@@ -137,25 +136,37 @@ export default function Home() {
           )}
         </VideoWrapper>
       </GridMax>
-
-      {!isSamplesLoading && <CardsList sampleListData={samplesData} />}
-      {/* <ImmVideoSection> */}
+      <CardsListWrapper ref={measuredRef}>
+        <CardsList
+          width={width}
+          sampleListData={samplesData}
+          isSamplesLoading={isSamplesLoading}
+        />
+      </CardsListWrapper>
       <GridMax>
         <StyledSectionTitle>移民专区</StyledSectionTitle>
         <DynamicCol ratio={6}>
           {isImmVideo && (
-            <VideoEmbed
-              isVideoLoading={isImmVideoLoading}
-              embedId={immVideoData.id}
-              description={immVideoData.description}
-            />
+            <VideoWrapper ref={measuredRef}>
+              <VideoEmbed
+                width={width}
+                isVideoLoading={isImmVideoLoading}
+                embedId={immVideoData.id}
+                description={immVideoData.description}
+              />
+            </VideoWrapper>
           )}
         </DynamicCol>
         <DynamicCol ratio={6}>
-          <PostsList postListData={postListData} />
+          <PostsListContainer ref={measuredRef}>
+            <PostsList
+              width={width}
+              postListData={postListData}
+              isPostListLoading={isPostListLoading}
+            />
+          </PostsListContainer>
         </DynamicCol>
       </GridMax>
-      {/* </ImmVideoSection> */}
       <Footer
         isFooterLoading={isFooterLoading}
         footerData={footerData}
