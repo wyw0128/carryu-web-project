@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { urlFor } from "../../utils/sanity-utils";
-import { H3 } from "../../components/Typography";
-import { GridMax, Col12, DynamicCol } from "../../styles/layout";
+import { GridMax, DynamicCol } from "../../styles/layout";
 import Carousel from "../../components/Carousel/Carousel";
 import CardsList from "../../components/CardsList/CardsList";
 import VideoEmbed from "../../components/Video/VideoEmbed";
 import PostsList from "../../components/PostsList/PostsList";
+import Footer from "../../components/Footer/Footer";
 import { SectionTitle } from "../Home/SectionTitle";
 import styled from "styled-components";
 
@@ -16,10 +16,19 @@ const StyledSectionTitle = styled(SectionTitle)`
   grid-column: 6 / 8;
   margin-bottom: 4rem;
   justify-content: center;
+  @media screen and (min-width: 250px) and (max-width: 430px) {
+    grid-column: span 1;
+    font-size: 32px;
+    line-height: 48px;
+  }
 `;
 
 const VideoWrapper = styled.div`
   grid-column: 3 / 11;
+  @media screen and (min-width: 250px) and (max-width: 430px) {
+    grid-column: span 1;
+    padding: 0 10px;
+  }
 `;
 
 const client = sanityClient({
@@ -38,18 +47,22 @@ const eduVideoQuery =
 const immVideoQuery =
   '*[_type == "videos" && type == "immigration"] | order(_updatedAt desc) [0] {id,description,type}';
 const postsQuery = '*[_type == "posts" ] | order(_updatedAt desc) {title}';
+const footerQuery =
+  '*[_type == "footer"] | order(_updatedAt desc){text,"Url":externalUrl.externalUrl}';
 export default function Home() {
   const [isCarouselLoading, setIsCarouselLoading] = useState(true);
   const [isSamplesLoading, setIsSamplesLoading] = useState(true);
   const [isEduVideoLoading, setIsEduVideoLoading] = useState(true);
   const [isImmVideoLoading, setIsImmVideoLoading] = useState(true);
   const [isPostListLoading, setIsPostListLoading] = useState(true);
+  const [isFooterLoading, setIsFooterLoading] = useState(true);
   const [sliderImageSrcs, setImageSrcs] = useState([]);
   const [sliderAlts, setSliderAlts] = useState([]);
   const [samplesData, setSamplesData] = useState([]);
   const [eduVideoData, setEduVideoData] = useState({});
   const [immVideoData, setImmVideoData] = useState({});
   const [postListData, setPostListData] = useState([]);
+  const [footerData, setFooterData] = useState([]);
   useEffect(() => {
     try {
       client.fetch(carouselQuery, {}).then((sliders) => {
@@ -73,6 +86,10 @@ export default function Home() {
       client.fetch(postsQuery, {}).then((result) => {
         setIsPostListLoading(false);
         setPostListData(result.map((data) => data.title));
+      });
+      client.fetch(footerQuery, {}).then((result) => {
+        setIsFooterLoading(false);
+        setFooterData(result.map((data) => data));
       });
     } catch (err) {
       console.error(err);
@@ -138,8 +155,11 @@ export default function Home() {
           <PostsList postListData={postListData} />
         </DynamicCol>
       </GridMax>
-
       {/* </ImmVideoSection> */}
+      <Footer
+        isFooterLoading={isFooterLoading}
+        footerData={footerData}
+      ></Footer>
     </>
   );
 }
